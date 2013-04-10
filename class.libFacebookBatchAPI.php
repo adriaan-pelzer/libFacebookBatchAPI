@@ -22,13 +22,13 @@ class FacebookBatchAPI {
         $params = array ( 'batch' => json_encode ( $this->calls ) );
         $params['access_token'] = $this->token;
         $url = 'https://graph.facebook.com/';
-        if ( empty ( ( $ch = curl_init ( $url ) ) ) ) { throw new Exception ( 'Cannot initialise curl' ); }
-        if ( empty ( curl_setopt ( $ch, CURLOPT_POST, 1 ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_POST' ); }
-        if ( empty ( curl_setopt ( $ch, CURLOPT_POSTFIELDS, $params ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_POSTFIELDS' ); }
-        if ( empty ( curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_RETURNTRANSFER' ); }
-        if ( empty ( $this->rawdata = curl_exec ( $ch ) ) { throw new Exception ( 'Cannot execute curl connection' ); }
+        if ( ! ( $ch = curl_init ( $url ) ) ) { throw new Exception ( 'Cannot initialise curl' ); }
+        if ( ! ( curl_setopt ( $ch, CURLOPT_POST, 1 ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_POST' ); }
+        if ( ! ( curl_setopt ( $ch, CURLOPT_POSTFIELDS, $params ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_POSTFIELDS' ); }
+        if ( ! ( curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_RETURNTRANSFER' ); }
+        if ( ! ( $this->rawdata = curl_exec ( $ch ) ) { throw new Exception ( 'Cannot execute curl connection' ); }
         curl_close ( $ch );
-        if ( empty ( ( $this->data = json_decode ( $this->data ) ) ) { throw new Exception ( 'Cannot parse output json' ); }
+        if ( ! ( $this->data = json_decode ( $this->data ) ) ) { throw new Exception ( 'Cannot parse output json' ); }
         $this->calls = array ();
         return $this->data;
     }
