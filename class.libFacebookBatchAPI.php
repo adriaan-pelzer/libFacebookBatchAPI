@@ -90,7 +90,7 @@ class FacebookBatchAPI {
 
 }
 
-$access_token = 'BAACEdEose0cBAEKbrRp9SE9aImt3fIg9LQTpeLN0RBAfEr70gLOfZAhqDCu5KOwtt1yaIs1nyOSLHDZCk02hmzHLEp29nbihmLcLOckBZCZBHYJtiRV1HUUpo9khoB7uKDNXL9IOsmdeqVfsVbfVnr1CIfTRz8CPenCwDmxtHaLNAxKlqgAj8DPDs2ZCtr5keZBvCnQWAvvgZDZD';
+$access_token = '<YOUR TOKEN>';
 
 $BatchAPI = new FacebookBatchAPI ( $access_token );
 
@@ -122,46 +122,4 @@ foreach ( $results[0]['result']->body->data as $friend ) {
 
 echo "Success: " . $s . "\n";
 echo "Failed: " . $f . "\n";
-
-/*$data = json_decode ( batchAPI ( $calls, $access_token ) );
-
-$callses = array ();
-$calls = array ();
-
-$output = json_decode ( $data[0]->body );
-
-$n = 0;
-
-foreach ( $output->data as $friend ) {
-    $call = array ();
-    $call['method'] = 'GET';
-    $call['relative_url'] = $friend->id . '/friends';
-    array_push ( $calls, $call );
-    if ( ++$n >= 50 ) {
-        array_push ( $callses, $calls );
-        $n = 0;
-        $calls = array ();
-    }
-}
-
-$s = 0;
-$f = 0;
-
-foreach ( $callses as $calls ) {
-    $data = json_decode ( batchAPI ( $calls, $access_token ) );
-    foreach ( $data as $dat ) {
-        if ( ! empty ( $dat ) ) {
-            if ( $dat->code == 200 ) {
-                $s++;
-            } else {
-                $f++;
-            }
-        } else {
-            $f++;
-        }
-    }
-}
-
-echo "Success: " . $s . "\n";
-echo "Failed: " . $f . "\n";*/
 ?>
