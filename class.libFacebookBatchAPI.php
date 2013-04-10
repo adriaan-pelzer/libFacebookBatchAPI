@@ -28,7 +28,7 @@ class FacebookBatchAPI {
         if ( ! ( curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 ) ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_RETURNTRANSFER' ); }
         if ( ! ( $this->rawdata = curl_exec ( $ch ) ) ) { throw new Exception ( 'Cannot execute curl connection' ); }
         curl_close ( $ch );
-        if ( ( $this->data = json_decode ( $this->data ) ) == NULL ) { throw new Exception ( 'Cannot parse output json' ); }
+        if ( ( $this->data = json_decode ( $this->rawdata ) ) == NULL ) { throw new Exception ( 'Cannot parse output json' ); }
         $this->calls = array ();
         return $this->data;
     }
