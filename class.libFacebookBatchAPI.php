@@ -16,7 +16,6 @@ class FacebookBatchAPI {
     public function __construct ( $token ) {
         $this->token = $token;
         $this->calls = array ();
-        $this->results = array ();
     }
 
     public function addCall ( $method, $relative_url ) {
@@ -63,6 +62,8 @@ class FacebookBatchAPI {
 
     public function flushCalls () {
         $this->_log ( "Calling flushCalls with " . sizeof ( $this->calls ) . " calls" );
+
+        $this->results = array ();
 
         while ( sizeof ( $this->calls ) ) {
             $callCache = $this->flushOnce ();
