@@ -1,25 +1,38 @@
 <?php
-function batchAPI ( $calls, $token ) {
-    $params = array ( 'batch' => json_encode ( $calls ) );
-    $params['access_token'] = $token;
-    $url = 'https://graph.facebook.com/';
-    $ch = curl_init ( $url );
-    curl_setopt ( $ch, CURLOPT_POST, 1 );
-    curl_setopt ( $ch, CURLOPT_POSTFIELDS, $params );
-    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
-    $data = curl_exec ( $ch );
-    curl_close ( $ch );
-    return $data;
-}
+class FacebookBatchAPI {
+    private $calls;
+    private $results;
+    private $token;
+    private $rawdata;
+    private $data;
 
-function getAPI ( $endpoint, $token ) {
-    $tokenString = ( preg_match ( '/\?/', $endpoint ) ? '&' : '?' ) . 'access_token=' . $token;
-    $url = 'https://graph.facebook.com/' . $endpoint . $tokenString;
-    $ch = curl_init ( $url );
-    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
-    $data = curl_exec ( $ch );
-    curl_close ( $ch );
-    return $data;
+    public function __construct ( $token ) {
+        $this->token = $token;
+        $this->calls = array ();
+    }
+
+    function addCall ( $method, $relative_url ) {
+        $call = array ();
+        $call['method'] = $method;
+        $call['relative_url'] = $relative_url;
+        array_push ( $calls, $call );
+    }
+
+    function flushCalls () {
+        $params = array ( 'batch' => json_encode ( $this->calls ) );
+        $params['access_token'] = $this->token;
+        $url = 'https://graph.facebook.com/';
+        $ch = curl_init ( $url ) || throw new Exception ( 'Cannot initialise curl' );
+        curl_setopt ( $ch, CURLOPT_POST, 1 ) || throw new Exception ( 'Cannot set curl option CURLOPT_POST' );
+        curl_setopt ( $ch, CURLOPT_POSTFIELDS, $params ) || throw new Exception ( 'Cannot set curl option CURLOPT_POSTFIELDS' );
+        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 ) || throw new Exception ( 'Cannot set curl option CURLOPT_RETURNTRANSFER' );
+        $this->rawdata = curl_exec ( $ch ) || throw new Exception ( 'Cannot execute curl connection' );
+        curl_close ( $ch );
+        $this->data = json_decode ( $this->data ) || throw new Exception ( 'Cannot parse output json' );
+        $this->calls = array ();
+        return $this->data;
+    }
+
 }
 
 $calls = array (
@@ -31,7 +44,13 @@ $calls = array (
 
 $access_token = 'BAACEdEose0cBAGVSknwpHjyhgBK670IyKhOA8QifRBsd4JO0hBOJqUtNtGgS6wO2O7ufn7CuZCuu64p7R9DYIHDpp7H5U3JJf1R4Eq1iyrVBMHOTZC';
 
-$data = json_decode ( batchAPI ( $calls, $access_token ) );
+$BatchAPI = new FacebookBatchAPI ( $access_token );
+
+$BatchAPI->addCall ( 'GET', 'me/friends' );
+
+print_r ( $BatchAPI->flushCalls () );
+
+/*$data = json_decode ( batchAPI ( $calls, $access_token ) );
 
 $callses = array ();
 $calls = array ();
@@ -71,5 +90,5 @@ foreach ( $callses as $calls ) {
 }
 
 echo "Success: " . $s . "\n";
-echo "Failed: " . $f . "\n";
+echo "Failed: " . $f . "\n";*/
 ?>
