@@ -70,7 +70,16 @@ foreach ( $results[0]['result']->body->data as $friend ) {
     $BatchAPI->addCall ( 'GET', $friend->id . '/friends' );
 
     if ( ++$n >= 50 ) {
-        print_r ( $BatchAPI->flushCalls () );
+        $results = $BatchAPI->flushCalls ();
+
+        foreach ( $results as $result ) {
+            if ( $result['result']->code == 500 ) {
+                echo "No Permissions\n";
+            } else {
+                echo sizeof ( $result['result']->body->data );
+            }
+        }
+
         $n = 0;
     }
 }
