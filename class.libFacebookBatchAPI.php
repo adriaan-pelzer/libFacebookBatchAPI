@@ -65,6 +65,8 @@ $BatchAPI->addCall ( 'GET', 'me/friends' );
 $results = $BatchAPI->flushCalls ();
 
 $n = 0;
+$s = 0;
+$f = 0;
 
 foreach ( $results[0]['result']->body->data as $friend ) {
     $BatchAPI->addCall ( 'GET', $friend->id . '/friends' );
@@ -74,15 +76,18 @@ foreach ( $results[0]['result']->body->data as $friend ) {
 
         foreach ( $results as $result ) {
             if ( $result['result']->code == 500 ) {
-                echo "No Permissions\n";
+                $f++;
             } else {
-                echo sizeof ( $result['result']->body->data );
+                $s++;
             }
         }
 
         $n = 0;
     }
 }
+
+echo "Success: " . $s . "\n";
+echo "Failed: " . $f . "\n";*/
 
 /*$data = json_decode ( batchAPI ( $calls, $access_token ) );
 
