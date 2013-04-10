@@ -35,7 +35,7 @@ class FacebookBatchAPI {
 
 }
 
-$access_token = 'BAACEdEose0cBAGVSknwpHjyhgBK670IyKhOA8QifRBsd4JO0hBOJqUtNtGgS6wO2O7ufn7CuZCuu64p7R9DYIHDpp7H5U3JJf1R4Eq1iyrVBMHOTZC';
+$access_token = 'BAACEdEose0cBAEKbrRp9SE9aImt3fIg9LQTpeLN0RBAfEr70gLOfZAhqDCu5KOwtt1yaIs1nyOSLHDZCk02hmzHLEp29nbihmLcLOckBZCZBHYJtiRV1HUUpo9khoB7uKDNXL9IOsmdeqVfsVbfVnr1CIfTRz8CPenCwDmxtHaLNAxKlqgAj8DPDs2ZCtr5keZBvCnQWAvvgZDZD';
 
 $BatchAPI = new FacebookBatchAPI ( $access_token );
 
