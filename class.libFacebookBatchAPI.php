@@ -30,6 +30,13 @@ class FacebookBatchAPI {
         curl_close ( $ch );
         if ( ( $this->data = json_decode ( $this->rawdata ) ) == NULL ) { throw new Exception ( 'Cannot parse output json' ); }
         $this->calls = array ();
+
+        foreach ( $i = 0; $i < sizeof ( $this->data ); $i++ ) {
+            if ( $this->data[$i]->code == 200 ) {
+                $this->data[$i]->body = json_decode ( $this->data[$i]->body );
+            }
+        }
+
         return $this->data;
     }
 
