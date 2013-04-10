@@ -66,7 +66,7 @@ $results = $BatchAPI->flushCalls ();
 
 $n = 0;
 
-foreach ( $output->data as $friend ) {
+foreach ( $results[0]['result']->body->data as $friend ) {
     $BatchAPI->addCall ( 'GET', $friend->ID . '/friends' );
 
     if ( ++$n >= 50 ) {
