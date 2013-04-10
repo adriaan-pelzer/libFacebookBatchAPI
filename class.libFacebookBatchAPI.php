@@ -9,6 +9,7 @@ class FacebookBatchAPI {
     public function __construct ( $token ) {
         $this->token = $token;
         $this->calls = array ();
+        $this->results = array ();
     }
 
     function addCall ( $method, $relative_url ) {
@@ -19,25 +20,38 @@ class FacebookBatchAPI {
     }
 
     function flushCalls () {
-        $params = array ( 'batch' => json_encode ( $this->calls ) );
-        $params['access_token'] = $this->token;
-        $url = 'https://graph.facebook.com/';
-        if ( ! ( $ch = curl_init ( $url ) ) ) { throw new Exception ( 'Cannot initialise curl' ); }
-        if ( ! ( curl_setopt ( $ch, CURLOPT_POST, 1 ) ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_POST' ); }
-        if ( ! ( curl_setopt ( $ch, CURLOPT_POSTFIELDS, $params ) ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_POSTFIELDS' ); }
-        if ( ! ( curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 ) ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_RETURNTRANSFER' ); }
-        if ( ! ( $this->rawdata = curl_exec ( $ch ) ) ) { throw new Exception ( 'Cannot execute curl connection' ); }
-        curl_close ( $ch );
-        if ( ( $this->data = json_decode ( $this->rawdata ) ) == NULL ) { throw new Exception ( 'Cannot parse output json' ); }
-        $this->calls = array ();
+        while ( sizeof ( $this->calls ) ) {
+            $params = array ( 'batch' => json_encode ( $this->calls ) );
+            $params['access_token'] = $this->token;
+            $url = 'https://graph.facebook.com/';
+            if ( ! ( $ch = curl_init ( $url ) ) ) { throw new Exception ( 'Cannot initialise curl' ); }
+            if ( ! ( curl_setopt ( $ch, CURLOPT_POST, 1 ) ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_POST' ); }
+                if ( ! ( curl_setopt ( $ch, CURLOPT_POSTFIELDS, $params ) ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_POSTFIELDS' ); }
+                    if ( ! ( curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 ) ) ) { throw new Exception ( 'Cannot set curl option CURLOPT_RETURNTRANSFER' ); }
+                        if ( ! ( $this->rawdata = curl_exec ( $ch ) ) ) { throw new Exception ( 'Cannot execute curl connection' ); }
+                            curl_close ( $ch );
+            if ( ( $this->data = json_decode ( $this->rawdata ) ) == NULL ) { throw new Exception ( 'Cannot parse output json' ); }
+                $callCache = $this->calls;
+            $this->calls = array ();
 
-        for ( $i = 0; $i < sizeof ( $this->data ); $i++ ) {
-            if ( $this->data[$i]->code == 200 ) {
-                $this->data[$i]->body = json_decode ( $this->data[$i]->body );
+            for ( $i = 0; $i < sizeof ( $this->data ); $i++ ) {
+                if ( $this->data[$i] == NULL ) {
+                    array_push ( $this->calls, $callCache[$i] );
+                } else {
+                    $result = array ();
+                    $result['call'] = $callCache[$i];
+
+                    if ( $this->data[$i]->code == 200 ) {
+                        $this->data[$i]->body = json_decode ( $this->data[$i]->body );
+                    }
+
+                    $result['result'] = $this->data[$i];
+                    array_push ( $this->results, $result );
+                }
             }
         }
 
-        return $this->data;
+        return $this->results;
     }
 
 }
