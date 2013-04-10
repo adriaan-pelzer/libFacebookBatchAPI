@@ -62,7 +62,18 @@ $BatchAPI = new FacebookBatchAPI ( $access_token );
 
 $BatchAPI->addCall ( 'GET', 'me/friends' );
 
-print_r ( $BatchAPI->flushCalls () );
+$results = $BatchAPI->flushCalls ();
+
+$n = 0;
+
+foreach ( $output->data as $friend ) {
+    $BatchAPI->addCall ( 'GET', $friend->ID . '/friends' );
+
+    if ( ++$n >= 50 ) {
+        print_r ( $BatchAPI->fludhCalls () );
+        $n = 0;
+    }
+}
 
 /*$data = json_decode ( batchAPI ( $calls, $access_token ) );
 
