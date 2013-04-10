@@ -87,7 +87,7 @@ foreach ( $results[0]['result']->body->data as $friend ) {
 }
 
 echo "Success: " . $s . "\n";
-echo "Failed: " . $f . "\n";*/
+echo "Failed: " . $f . "\n";
 
 /*$data = json_decode ( batchAPI ( $calls, $access_token ) );
 
