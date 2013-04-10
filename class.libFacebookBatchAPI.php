@@ -15,7 +15,7 @@ class FacebookBatchAPI {
         $call = array ();
         $call['method'] = $method;
         $call['relative_url'] = $relative_url;
-        array_push ( $calls, $call );
+        array_push ( $this->calls, $call );
     }
 
     function flushCalls () {
